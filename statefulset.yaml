@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-app
+spec:
+  serviceName: "my-app-service"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: 13riddhi/get-started-app:latest # Image hosted on Docker Hub
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: app-storage
+              mountPath: /data  # Path inside the container where the app stores data
+  volumeClaimTemplates:
+    - metadata:
+        name: app-storage
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 5Gi  # Adjust the storage size as needed
+
